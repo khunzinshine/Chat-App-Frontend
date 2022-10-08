@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import axios from "axios";
-import { Buffer } from "buffer";
-import loader from "../assets/loader.gif";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-import { setAvatarRoute } from "../utils/APIRoutes";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import axios from 'axios';
+import { Buffer } from 'buffer';
+import loader from '../assets/loader.gif';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import { setAvatarRoute } from '../utils/APIRoutes';
+
 export default function SetAvatar() {
   const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
@@ -14,21 +15,22 @@ export default function SetAvatar() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
   const toastOptions = {
-    position: "bottom-right",
+    position: 'bottom-right',
     autoClose: 8000,
     pauseOnHover: true,
     draggable: true,
-    theme: "dark",
+    theme: 'dark',
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
-      navigate("/login");
+      navigate('/login');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setProfilePicture = async () => {
     if (selectedAvatar === undefined) {
-      toast.error("Please select an avatar", toastOptions);
+      toast.error('Please select an avatar', toastOptions);
     } else {
       const user = await JSON.parse(
         localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
@@ -45,47 +47,54 @@ export default function SetAvatar() {
           process.env.REACT_APP_LOCALHOST_KEY,
           JSON.stringify(user)
         );
-        navigate("/");
+        navigate('/');
       } else {
-        toast.error("Error setting avatar. Please try again.", toastOptions);
+        toast.error('Error setting avatar. Please try again.', toastOptions);
       }
     }
   };
 
-  useEffect(async () => {
+  // Get each 4 random image avatars
+  const pushAvatars = async () => {
     const data = [];
     for (let i = 0; i < 4; i++) {
       const image = await axios.get(
         `${api}/${Math.round(Math.random() * 1000)}`
       );
       const buffer = new Buffer(image.data);
-      data.push(buffer.toString("base64"));
+      data.push(buffer.toString('base64'));
     }
     setAvatars(data);
     setIsLoading(false);
+  };
+
+  useEffect(() => {
+    pushAvatars();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <>
       {isLoading ? (
         <Container>
-          <img src={loader} alt="loader" className="loader" />
+          <img src={loader} alt='loader' className='loader' />
         </Container>
       ) : (
         <Container>
-          <div className="title-container">
+          <div className='title-container'>
             <h1>Pick an Avatar as your profile picture</h1>
           </div>
-          <div className="avatars">
+          <div className='avatars'>
             {avatars.map((avatar, index) => {
               return (
                 <div
                   className={`avatar ${
-                    selectedAvatar === index ? "selected" : ""
+                    selectedAvatar === index ? 'selected' : ''
                   }`}
                 >
                   <img
                     src={`data:image/svg+xml;base64,${avatar}`}
-                    alt="avatar"
+                    alt='avatar'
                     key={avatar}
                     onClick={() => setSelectedAvatar(index)}
                   />
@@ -93,7 +102,7 @@ export default function SetAvatar() {
               );
             })}
           </div>
-          <button onClick={setProfilePicture} className="submit-btn">
+          <button onClick={setProfilePicture} className='submit-btn'>
             Set as Profile Picture
           </button>
           <ToastContainer />
