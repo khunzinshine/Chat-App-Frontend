@@ -9,13 +9,15 @@ import { registerRoute } from '../utils/APIRoutes';
 
 export default function Register() {
   const navigate = useNavigate();
+
   const toastOptions = {
-    position: 'bottom-right',
+    position: 'top-right',
     autoClose: 8000,
     pauseOnHover: true,
     draggable: true,
-    theme: 'dark',
+    theme: 'light',
   };
+
   const [values, setValues] = useState({
     username: '',
     email: '',
@@ -24,7 +26,7 @@ export default function Register() {
   });
 
   useEffect(() => {
-    if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+    if (localStorage.getItem(process.env.REACT_APP_API_KEY)) {
       navigate('/');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,7 +79,7 @@ export default function Register() {
       }
       if (data.status === true) {
         localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
+          process.env.REACT_APP_API_KEY,
           JSON.stringify(data.user)
         );
         navigate('/');

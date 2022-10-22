@@ -4,21 +4,23 @@ import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { loginRoute } from '../utils/APIRoutes';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
   const navigate = useNavigate();
   const [values, setValues] = useState({ username: '', password: '' });
+
   const toastOptions = {
-    position: 'bottom-right',
+    position: 'top-right',
     autoClose: 8000,
     pauseOnHover: true,
     draggable: true,
     theme: 'dark',
   };
+
   useEffect(() => {
-    if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+    if (localStorage.getItem(process.env.REACT_APP_API_KEY)) {
       navigate('/');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,12 +50,14 @@ export default function Login() {
         username,
         password,
       });
+
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       }
+
       if (data.status === true) {
         localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
+          process.env.REACT_APP_API_KEY,
           JSON.stringify(data.user)
         );
 
