@@ -3,15 +3,20 @@ import styled from 'styled-components';
 import Robot from '../assets/robot.gif';
 export default function Welcome() {
   const [userName, setUserName] = useState('');
-  useEffect(async () => {
-    setUserName(
-      await JSON.parse(localStorage.getItem(process.env.REACT_APP_API_KEY))
-        .username
-    );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await JSON.parse(
+        localStorage.getItem(process.env.REACT_APP_API_KEY)
+      ).username;
+      setUserName(response);
+    };
+    fetchData();
   }, []);
+
   return (
     <Container>
-      <img src={Robot} alt='' />
+      <img src={Robot} alt='Robot' />
       <h1>
         Welcome, <span>{userName}!</span>
       </h1>
