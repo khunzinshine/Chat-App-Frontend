@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import ChatInput from './ChatInput';
 import Logout from './Logout';
-import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 import { sendMessageRoute, recieveMessageRoute } from '../utils/APIRoutes';
 
 export default function ChatContainer({ currentChat, socket }) {
@@ -11,37 +11,44 @@ export default function ChatContainer({ currentChat, socket }) {
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
+  const fetchData = async () => {
+    const data = await JSON.parse(
+      localStorage.getItem(process.env.REACT_APP_API_KEY)
+    );
+    const response = await axios.post(recieveMessageRoute, {
+      from: data._id,
+      to: currentChat._id,
+    });
+    setMessages(response.data);
+  };
+
+  const getCurrentChat = async () => {
+    if (currentChat) {
+      await JSON.parse(localStorage.getItem(process.env.REACT_APP_API_KEY))._id;
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await JSON.parse(localStorage.getItem(process.env.API_KEY));
-      const response = await axios.post(recieveMessageRoute, {
-        from: data._id,
-        to: currentChat._id,
-      });
-      setMessages(response.data);
-    };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChat]);
 
   useEffect(() => {
-    const getCurrentChat = async () => {
-      if (currentChat) {
-        await JSON.parse(localStorage.getItem(process.env.REACT_APP_API_KEY))
-          ._id;
-      }
-    };
     getCurrentChat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChat]);
 
   const handleSendMsg = async (msg) => {
     const data = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_API_KEY)
     );
+
     socket.current.emit('send-msg', {
       to: currentChat._id,
       from: data._id,
       msg,
     });
+
     await axios.post(sendMessageRoute, {
       from: data._id,
       to: currentChat._id,
