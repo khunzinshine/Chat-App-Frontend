@@ -7,21 +7,24 @@ export default function Contacts({ contacts, changeChat }) {
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
 
+  const fetchData = async () => {
+    const data = await JSON.parse(
+      localStorage.getItem(process.env.REACT_APP_API_KEY)
+    );
+    setCurrentUserName(data.username);
+    setCurrentUserImage(data.avatarImage);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await JSON.parse(
-        localStorage.getItem(process.env.REACT_APP_API_KEY)
-      );
-      setCurrentUserName(data.username);
-      setCurrentUserImage(data.avatarImage);
-    };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const changeCurrentChat = (index, contact) => {
     setCurrentSelected(index);
     changeChat(contact);
   };
+
   return (
     <>
       {currentUserImage && currentUserImage && (
@@ -69,6 +72,7 @@ export default function Contacts({ contacts, changeChat }) {
     </>
   );
 }
+
 const Container = styled.div`
   display: grid;
   grid-template-rows: 10% 75% 15%;
