@@ -1,5 +1,9 @@
 # Getting Started with Create React App
 
+## Live Demo
+
+https://khun-chatapp.netlify.app/
+
 ## API
 
 https://khun-chatapp.herokuapp.com
