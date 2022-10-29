@@ -2,7 +2,7 @@
 
 ## API
 
-https://khun-chat-app.vercel.app/
+https://khun-chatapp.herokuapp.com
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
