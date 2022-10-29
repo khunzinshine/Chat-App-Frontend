@@ -4,8 +4,10 @@ import { BiPowerOff } from 'react-icons/bi';
 import styled from 'styled-components';
 import axios from 'axios';
 import { logoutRoute } from '../utils/APIRoutes';
+
 export default function Logout() {
   const navigate = useNavigate();
+
   const handleClick = async () => {
     const id = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_API_KEY)
@@ -16,6 +18,7 @@ export default function Logout() {
       navigate('/login');
     }
   };
+
   return (
     <Button onClick={handleClick}>
       <BiPowerOff />
